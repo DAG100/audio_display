@@ -1,28 +1,23 @@
-import numpy as np
-import pyaudio
+import array
+import pygame
 
-p = pyaudio.PyAudio()
+pygame.init()
+screen = pygame.display.set_mode((800,640))
+screen.fill((0,0,0))
+#thelist = [(0, 400), (200,200), (400,0)]
 
-volume = 0.5  # range [0.0, 1.0]
-fs = 44100  # sampling rate, Hz, must be integer
-duration = 5.0  # in seconds, may be float
-f = 440.0  # sine frequency, Hz, may be float
+thelist = list(zip(range(400), range(400, 0, -1)))
+color = pygame.Color(0,0,0)
+color.hsva = (90, 100, 100)
 
-# generate samples, note conversion to float32 array
-samples = (np.sin(2 * np.pi * np.arange(fs * duration) * f / fs)).astype(np.int16)
+while True:
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT: sys.exit()
+	
+	pygame.draw.lines(screen, color, False, thelist)
+	pygame.display.flip()
 
-# per @yahweh comment explicitly convert to bytes sequence
-output_bytes = (volume * samples).tobytes()
-
-# for paFloat32 sample values must be in range [-1.0, 1.0]
-stream = p.open(format=pyaudio.paInt16,
-                channels=1,
-                rate=fs,
-                output=True)
-
-# play. May repeat with different volume values (if done interactively)
-stream.write(output_bytes)
-stream.stop_stream()
-stream.close()
-
-p.terminate()
+datarray = array.array('h')
+data = b'\x12\x34\x56\x78'
+datarray.frombytes(data)
+print(datarray)
