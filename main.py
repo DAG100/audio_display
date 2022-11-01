@@ -1,6 +1,4 @@
 import pyaudio
-import numpy as np
-import matplotlib.pyplot as plt
 import pygame
 import sys
 import array
@@ -23,12 +21,9 @@ stream = p.open(format=FORMAT,
                 frames_per_buffer=CHUNK)
 
 print("* recording")
-fig, ax = plt.subplots()
 data = 0
 datarray = array.array('h')
-# t = np.arange(0, 1024)
 t = range(0, 1024)
-frames = []
 i = 1
 color = pygame.Color(0,0,0)
 try:
@@ -43,31 +38,12 @@ try:
 		datarray.frombytes(data)
 		
 		screen.fill((240,240,240), special_flags=pygame.BLEND_MULT)
-		pygame.draw.lines(screen, color, False, list(zip(t, [x/128 + 320 for x in datarray])))
+		pygame.draw.lines(screen, color, False, list(zip(t, [x/100 + 320 for x in datarray])))
 		pygame.display.flip()
 		datarray = array.array('h')
-		#screen.fill((abs(int(int_data/32768)),0,0))
-		#pygame.display.flip()
-		
-		
 finally:
 	print("* done recording")
 	stream.stop_stream()
 	stream.close()
 	p.terminate()
 
-
-# intframes = []
-# 
-# for i in frames:
-# 	intframes.append(int.from_bytes(i, "little", signed=True))
-# 	
-# 	
-# framesnp = np.array(intframes)
-# t = np.arange(0, 44100*RECORD_SECONDS)
-# 
-# print(framesnp)
-# 
-# fig, ax = plt.subplots()
-# ax.plot(t, intframes)
-# plt.show()
